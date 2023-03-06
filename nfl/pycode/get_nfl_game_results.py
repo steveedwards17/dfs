@@ -3,8 +3,9 @@ def get_nfl_game_results(week, season):
     from bs4 import BeautifulSoup
     import pandas as pd
     import re
+    import pickle
     
-    url = 'https://www.pro-football-reference.com/years/{}/week_{}.htm'.format(season, str(week))
+    url = 'https://www.pro-football-reference.com/years/{}/week_{}.htm'.format(str(season), str(week))
     html = urlopen(url)
     stats_page = BeautifulSoup(html, features='lxml')
     rows = stats_page.findAll('a')
@@ -39,3 +40,11 @@ def get_nfl_game_results(week, season):
     gameResults.rename(columns={'teamAbbrev_x':'visitingTeamAbbrev','teamAbbrev_y':'homeTeamAbbrev'}, inplace=True)
             
     return gameResults
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('nfl_week', help='NFL Week (integer)')
+    parser.add_argument('nfl_season', help='NFL Season (integer)')
+    args = parser.parse_args()
+    get_nfl_game_results(args.nfl_week, args.nfl_season)
